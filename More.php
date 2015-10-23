@@ -53,11 +53,11 @@ class More {
         $js = '$(document).ready(function () {
                 $("body").on("click", ".more", function () {
                     var next_page = parseInt($(this).attr("id").split("_").pop());
-                    url = window.location.origin + window.location.pathname + "?page=";
+                    url = window.location.origin + window.location.pathname;
                     $(this).addClass("rm");
                     $.ajax({
                         type: "GET",
-                        url: "/",
+                        url: url,
                         data: "page=" + next_page + "&per-page=10",
                         success: function (msg) {
                             var html = canvart_strstr(msg, "<!-- start reviews -->");
