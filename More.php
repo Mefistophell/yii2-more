@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace mefistophell\widgets;
+namespace vova07\themes\site\widgets;
 
 use Yii;
 
@@ -17,6 +17,11 @@ use Yii;
  * работает вместо постраничной навигации
  */
 class More {
+    
+    /**
+     * Количество выводимых записей
+     */
+    const quantity = 10;
 
     /**
      * Старт виджета
@@ -39,12 +44,34 @@ class More {
      * Виджет с кнопкой "Показать еще"
      * 
      * <?= More::end(Yii::$app->request->get('page')); ?>
-     * @param type $page номер страницы
-     * 
-     * @return string
+     * @param string $page номер страницы
+     * @param object $dataProvider объект $dataProvider
+     * @return string выводит кнопку и js-скрипт
      */
-    public static function widget($page) {
+    public static function widget($page, $dataProvider) {
+
+        $count = $dataProvider->totalCount;
+        $total = ceil($count / self::quantity);
         $page = empty($page) ? 2 : $page + 1;
+        $items = ($page - 1) * self::quantity;
+
+        if ($items > $count) {
+            $items = $count;
+        }
+
+        echo '<div class="total" style="text-align:center">'
+        . '<small>Показано: ' . $items . ' записей</small>'
+        . '<small> из ' . $count . '</small>'
+        . '</div>';
+
+        if ($page > $total) {
+            $js = '$(document).ready(function () {
+                    $(".rm").remove();
+                })';
+            echo Yii::$app->view->registerJs($js);
+            return;
+        }
+
         echo '<div style="text-align:center"><br>'
         . '<button id = "more_'
         . $page
@@ -55,6 +82,7 @@ class More {
                     var next_page = parseInt($(this).attr("id").split("_").pop());
                     url = window.location.origin + window.location.pathname;
                     $(this).addClass("rm");
+                    $(".total").addClass("rm");
                     $.ajax({
                         type: "GET",
                         url: url,
