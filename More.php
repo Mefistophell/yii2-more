@@ -43,9 +43,8 @@ class More {
     /**
      * Виджет с кнопкой "Показать еще"
      * 
-     * <?= More::end(Yii::$app->request->get('page')); ?>
      * @param string $page номер страницы
-     * @param object $dataProvider объект $dataProvider
+     * @param object $dataProvider
      * @return string выводит кнопку и js-скрипт
      */
     public static function widget($page, $dataProvider) {
